@@ -79,7 +79,11 @@ export const ExportSection: React.FC<ExportSectionProps> = ({ settings, metadata
     }
 
     const img = new Image();
-    img.crossOrigin = 'anonymous';
+    // Only set crossOrigin for remote http(s) URLs; data URLs fail in Firefox with anonymous crossOrigin
+    if (settings.imageUrl.startsWith('http://') || settings.imageUrl.startsWith('https://')) {
+      img.crossOrigin = 'anonymous';
+    }
+
     img.onload = () => {
       const paddingPx =
         settings.bgShape !== 'none' && settings.padding > 0
@@ -96,7 +100,13 @@ export const ExportSection: React.FC<ExportSectionProps> = ({ settings, metadata
       const link = document.createElement('a');
       link.download = fileName;
       link.href = canvas.toDataURL('image/png');
+      document.body.appendChild(link);
       link.click();
+      document.body.removeChild(link);
+    };
+
+    img.onerror = () => {
+      console.error('Failed to load image for canvas download:', settings.imageUrl);
     };
     img.src = settings.imageUrl;
   };

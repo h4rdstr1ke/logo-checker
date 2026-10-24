@@ -64,7 +64,7 @@ export const LogoUploader: React.FC<LogoUploaderProps> = ({ settings, onChange }
   );
 
   // Drag and drop events
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDrop = (e: React.DragEvent<HTMLElement>) => {
     e.preventDefault();
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       handleFile(e.dataTransfer.files[0]);
@@ -116,19 +116,18 @@ export const LogoUploader: React.FC<LogoUploaderProps> = ({ settings, onChange }
         </div>
       </div>
 
-      {/* Dropzone */}
-      <div
+      {/* Dropzone with native accessible label */}
+      <label
         data-testid="drop-zone"
         onDragOver={(e) => e.preventDefault()}
         onDrop={handleDrop}
-        onClick={() => fileInputRef.current?.click()}
-        className="group relative cursor-pointer border-2 border-dashed border-neutral-300 dark:border-neutral-700 hover:border-blue-500 dark:hover:border-blue-500 rounded-2xl p-6 text-center transition-all bg-neutral-50/50 dark:bg-neutral-800/30 hover:bg-blue-50/30 dark:hover:bg-blue-950/20"
+        className="group relative cursor-pointer block border-2 border-dashed border-neutral-300 dark:border-neutral-700 hover:border-blue-500 dark:hover:border-blue-500 rounded-2xl p-6 text-center transition-all bg-neutral-50/50 dark:bg-neutral-800/30 hover:bg-blue-50/30 dark:hover:bg-blue-950/20"
       >
         <input
           ref={fileInputRef}
           type="file"
           accept=".svg,.png,.jpg,.jpeg,.webp,.ico"
-          className="hidden"
+          className="sr-only"
           data-testid="file-input"
           onChange={(e) => {
             if (e.target.files && e.target.files[0]) {
@@ -137,16 +136,16 @@ export const LogoUploader: React.FC<LogoUploaderProps> = ({ settings, onChange }
           }}
         />
 
-        <div className="flex flex-col items-center justify-center space-y-2">
+        <div className="flex flex-col items-center justify-center space-y-2 pointer-events-none">
           <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center group-hover:scale-105 transition-transform shadow-xs">
             <UploadCloud className="w-6 h-6" />
           </div>
           <div>
             <div className="text-sm font-medium text-neutral-800 dark:text-neutral-200">
-              Перетащите файл или <span className="text-blue-500 underline">выберите на диске</span>
+              Перетащите файл или <span className="text-blue-500 underline font-semibold">нажмите для выбора</span>
             </div>
             <div className="text-xs text-neutral-400 mt-1 flex items-center justify-center gap-2">
-              <span>Поддержка SVG, PNG, JPG, WEBP, ICO</span>
+              <span>SVG, PNG, JPG, WEBP, ICO</span>
               <span>•</span>
               <span className="flex items-center gap-1 font-mono">
                 <Clipboard className="w-3 h-3" /> Вставка Ctrl+V
@@ -166,35 +165,45 @@ export const LogoUploader: React.FC<LogoUploaderProps> = ({ settings, onChange }
             </div>
           )}
         </div>
-      </div>
+      </label>
 
       {/* Preset Logos */}
       <div>
         <label className="block text-xs font-medium text-neutral-700 dark:text-neutral-300 mb-2 flex items-center gap-1">
           <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-          <span>Готовые примеры для быстрого тестирования:</span>
+          <span>Готовые примеры (кликните для проверки):</span>
         </label>
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
-          {PRESET_LOGOS.map((preset) => (
-            <button
-              key={preset.id}
-              type="button"
-              onClick={() => selectPreset(preset.id)}
-              className="p-2 rounded-xl border border-neutral-200 dark:border-neutral-800 hover:border-blue-400 dark:hover:border-blue-500 bg-white dark:bg-neutral-800/80 flex flex-col items-center gap-1.5 transition-all text-center group"
-            >
-              <div className="w-7 h-7 rounded-lg overflow-hidden flex items-center justify-center bg-neutral-100 dark:bg-neutral-700 group-hover:scale-105 transition-transform">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={preset.imageUrl}
-                  alt={preset.name}
-                  className="w-5 h-5 object-contain"
-                />
-              </div>
-              <span className="text-[11px] font-medium text-neutral-700 dark:text-neutral-300 truncate w-full">
-                {preset.name.split(' ')[0]}
-              </span>
-            </button>
-          ))}
+          {PRESET_LOGOS.map((preset) => {
+            const isSelected =
+              settings.fileName === `${preset.id}.svg` ||
+              settings.imageUrl === preset.imageUrl;
+
+            return (
+              <button
+                key={preset.id}
+                type="button"
+                onClick={() => selectPreset(preset.id)}
+                className={`p-2 rounded-xl border flex flex-col items-center gap-1.5 transition-all text-center group cursor-pointer ${
+                  isSelected
+                    ? 'border-blue-500 ring-2 ring-blue-500/30 bg-blue-50/70 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 font-semibold shadow-xs'
+                    : 'border-neutral-200 dark:border-neutral-800 hover:border-blue-400 dark:hover:border-blue-500 bg-white dark:bg-neutral-800/80 text-neutral-700 dark:text-neutral-300'
+                }`}
+              >
+                <div className="w-7 h-7 rounded-lg overflow-hidden flex items-center justify-center bg-neutral-100 dark:bg-neutral-700 group-hover:scale-105 transition-transform">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={preset.imageUrl}
+                    alt={preset.name}
+                    className="w-5 h-5 object-contain"
+                  />
+                </div>
+                <span className="text-[11px] truncate w-full">
+                  {preset.name.split(' ')[0]}
+                </span>
+              </button>
+            );
+          })}
         </div>
       </div>
 

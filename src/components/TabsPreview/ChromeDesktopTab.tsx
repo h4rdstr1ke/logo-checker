@@ -220,12 +220,16 @@ export const ChromeDesktopTab: React.FC<ChromeDesktopTabProps> = ({
             </button>
           </div>
 
-          {/* Omnibox (Address input) */}
-          <div
-            className={`flex-1 flex items-center gap-2 px-3 py-1.5 rounded-full text-xs transition-all ${
+          {/* Omnibox (Address bar) */}
+          <a
+            href={`https://${metadata.domain || 'example.com'}${metadata.pagePath || ''}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Открыть сайт по ссылке в новой вкладке"
+            className={`flex-1 flex items-center gap-2 px-3 py-1.5 rounded-full text-xs transition-all hover:ring-1 hover:ring-blue-500/50 cursor-pointer ${
               isDark
-                ? 'bg-[#202124] text-neutral-200 border border-transparent focus-within:border-blue-500'
-                : 'bg-[#f1f3f4] text-neutral-800 border border-transparent focus-within:border-blue-500'
+                ? 'bg-[#202124] text-neutral-200 border border-transparent'
+                : 'bg-[#f1f3f4] text-neutral-800 border border-transparent'
             }`}
           >
             <Lock className="w-3 h-3 text-emerald-500 shrink-0" />
@@ -239,9 +243,9 @@ export const ChromeDesktopTab: React.FC<ChromeDesktopTabProps> = ({
               {metadata.pagePath || ''}
             </span>
             <div className="ml-auto flex items-center gap-2 shrink-0">
-              <Star className="w-3.5 h-3.5 text-neutral-400 hover:text-amber-500 cursor-pointer" />
+              <Star className="w-3.5 h-3.5 text-neutral-400 hover:text-amber-500" />
             </div>
-          </div>
+          </a>
 
           {/* Profile / Extension Icons */}
           <div className="flex items-center gap-1.5 shrink-0 pl-1">
@@ -260,26 +264,47 @@ export const ChromeDesktopTab: React.FC<ChromeDesktopTabProps> = ({
           }`}
         >
           {/* User site bookmark */}
-          <div className="flex items-center gap-1.5 px-1.5 py-0.5 rounded hover:bg-neutral-500/15 cursor-pointer shrink-0">
+          <a
+            href={`https://${metadata.domain || 'example.com'}${metadata.pagePath || ''}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Открыть ваш сайт из закладок"
+            className="flex items-center gap-1.5 px-1.5 py-0.5 rounded hover:bg-neutral-500/15 cursor-pointer shrink-0"
+          >
             <FaviconImage settings={settings} size={14} alt="Bookmark" />
             <span className="font-medium">
               {metadata.siteName || 'Мой проект'}
             </span>
-          </div>
+          </a>
 
           {/* Reference Bookmarks */}
-          <div className="flex items-center gap-1.5 px-1.5 py-0.5 rounded hover:bg-neutral-500/15 cursor-pointer opacity-70 shrink-0">
+          <a
+            href="https://youtube.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 px-1.5 py-0.5 rounded hover:bg-neutral-500/15 cursor-pointer opacity-70 shrink-0"
+          >
             <Globe className="w-3.5 h-3.5 text-red-500" />
             <span>YouTube</span>
-          </div>
-          <div className="flex items-center gap-1.5 px-1.5 py-0.5 rounded hover:bg-neutral-500/15 cursor-pointer opacity-70 shrink-0">
+          </a>
+          <a
+            href="https://vk.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 px-1.5 py-0.5 rounded hover:bg-neutral-500/15 cursor-pointer opacity-70 shrink-0"
+          >
             <Globe className="w-3.5 h-3.5 text-sky-500" />
             <span>VK</span>
-          </div>
-          <div className="flex items-center gap-1.5 px-1.5 py-0.5 rounded hover:bg-neutral-500/15 cursor-pointer opacity-70 shrink-0">
+          </a>
+          <a
+            href="https://habr.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 px-1.5 py-0.5 rounded hover:bg-neutral-500/15 cursor-pointer opacity-70 shrink-0"
+          >
             <Globe className="w-3.5 h-3.5 text-blue-600" />
             <span>Habr</span>
-          </div>
+          </a>
         </div>
 
         {/* Webpage Content placeholder */}
