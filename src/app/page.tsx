@@ -1,69 +1,280 @@
-import Image from "next/image";
+'use client';
+
+import React, { useState } from 'react';
+import { LogoSettings, SiteMetadata } from '@/types';
+import { PRESET_LOGOS } from '@/utils/presets';
+import { LogoUploader } from '@/components/LogoUploader';
+import { MetadataForm } from '@/components/MetadataForm';
+import { ChromeDesktopTab } from '@/components/TabsPreview/ChromeDesktopTab';
+import { SafariPreview } from '@/components/TabsPreview/SafariPreview';
+import { GoogleSerp } from '@/components/SerpPreview/GoogleSerp';
+import { YandexSerp } from '@/components/SerpPreview/YandexSerp';
+import { ContrastAnalysis } from '@/components/Diagnostics/ContrastAnalysis';
+import { ExportSection } from '@/components/ExportSection';
+import {
+  Layers,
+  Search,
+  SlidersHorizontal,
+  Download,
+  Eye,
+  RotateCcw,
+} from 'lucide-react';
 
 export default function Home() {
+  // Initial state with TechFlow preset
+  const defaultPreset = PRESET_LOGOS[0];
+
+  const [settings, setSettings] = useState<LogoSettings>({
+    imageUrl: defaultPreset.imageUrl,
+    fileName: `${defaultPreset.id}.svg`,
+    bgShape: defaultPreset.defaultBgShape,
+    bgColor: defaultPreset.defaultBgColor,
+    padding: defaultPreset.defaultPadding,
+    borderRadius: 0,
+  });
+
+  const [metadata, setMetadata] = useState<SiteMetadata>({
+    siteName: 'TechFlow',
+    domain: 'techflow.io',
+    pagePath: '/product/analytics',
+    pageTitle: 'TechFlow — Аналитика и автоматизация для веб-сервисов',
+    description:
+      'Комплексное решение для мониторинга конверсий, интеграций и аналитики трафика в реальном времени. Попробуйте бесплатно без привязки карты.',
+  });
+
+  // Active filter tab: 'all' | 'tabs' | 'serp' | 'diagnostics' | 'export'
+  const [activeFilter, setActiveFilter] = useState<
+    'all' | 'tabs' | 'serp' | 'diagnostics' | 'export'
+  >('all');
+
+  const handleReset = () => {
+    setSettings({
+      imageUrl: defaultPreset.imageUrl,
+      fileName: `${defaultPreset.id}.svg`,
+      bgShape: defaultPreset.defaultBgShape,
+      bgColor: defaultPreset.defaultBgColor,
+      padding: defaultPreset.defaultPadding,
+      borderRadius: 0,
+    });
+    setMetadata({
+      siteName: 'TechFlow',
+      domain: 'techflow.io',
+      pagePath: '/product/analytics',
+      pageTitle: 'TechFlow — Аналитика и автоматизация для веб-сервисов',
+      description:
+        'Комплексное решение для мониторинга конверсий, интеграций и аналитики трафика в реальном времени. Попробуйте бесплатно без привязки карты.',
+    });
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div className="min-h-screen flex flex-col font-sans">
+      {/* Top Navigation Bar */}
+      <header className="sticky top-0 z-50 backdrop-blur-md bg-white/85 dark:bg-neutral-900/85 border-b border-neutral-200 dark:border-neutral-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+          {/* Logo & Brand */}
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center shadow-md shadow-blue-500/20">
+              <Eye className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="font-bold text-base tracking-tight text-neutral-900 dark:text-white flex items-center gap-1.5">
+                <span>LogoScope</span>
+                <span className="text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-950/80 text-blue-700 dark:text-blue-300">
+                  Preview
+                </span>
+              </div>
+              <div className="text-[11px] text-neutral-500 hidden sm:block">
+                Проверка логотипа во вкладках браузера и поисковиках
+              </div>
+            </div>
+          </div>
+
+          {/* Filter Pills */}
+          <div className="hidden md:flex items-center gap-1 bg-neutral-100 dark:bg-neutral-800 p-1 rounded-xl text-xs font-medium">
+            <button
+              type="button"
+              data-testid="filter-all"
+              onClick={() => setActiveFilter('all')}
+              className={`px-3 py-1.5 rounded-lg transition-all ${
+                activeFilter === 'all'
+                  ? 'bg-white dark:bg-neutral-700 shadow-xs text-neutral-900 dark:text-white font-semibold'
+                  : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+              }`}
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              Все превью
+            </button>
+            <button
+              type="button"
+              data-testid="filter-tabs"
+              onClick={() => setActiveFilter('tabs')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
+                activeFilter === 'tabs'
+                  ? 'bg-white dark:bg-neutral-700 shadow-xs text-neutral-900 dark:text-white font-semibold'
+                  : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+              }`}
             >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+              <Layers className="w-3.5 h-3.5" />
+              <span>Вкладки</span>
+            </button>
+            <button
+              type="button"
+              data-testid="filter-serp"
+              onClick={() => setActiveFilter('serp')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
+                activeFilter === 'serp'
+                  ? 'bg-white dark:bg-neutral-700 shadow-xs text-neutral-900 dark:text-white font-semibold'
+                  : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+              }`}
+            >
+              <Search className="w-3.5 h-3.5" />
+              <span>Поисковая выдача</span>
+            </button>
+            <button
+              type="button"
+              data-testid="filter-diagnostics"
+              onClick={() => setActiveFilter('diagnostics')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
+                activeFilter === 'diagnostics'
+                  ? 'bg-white dark:bg-neutral-700 shadow-xs text-neutral-900 dark:text-white font-semibold'
+                  : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+              }`}
+            >
+              <SlidersHorizontal className="w-3.5 h-3.5" />
+              <span>Контраст</span>
+            </button>
+            <button
+              type="button"
+              data-testid="filter-export"
+              onClick={() => setActiveFilter('export')}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
+                activeFilter === 'export'
+                  ? 'bg-white dark:bg-neutral-700 shadow-xs text-neutral-900 dark:text-white font-semibold'
+                  : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+              }`}
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>Экспорт</span>
+            </button>
+          </div>
+
+          {/* Reset button */}
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={handleReset}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-neutral-200 dark:border-neutral-700 text-xs text-neutral-600 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors shadow-2xs"
+              title="Сбросить к исходному примеру"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Сбросить</span>
+            </button>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </header>
+
+      {/* Main Content Area */}
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          {/* Left Column: Controls & Inputs */}
+          <div className="lg:col-span-5 space-y-6 lg:sticky lg:top-24">
+            <LogoUploader settings={settings} onChange={setSettings} />
+            <MetadataForm metadata={metadata} onChange={setMetadata} />
+          </div>
+
+          {/* Right Column: Interactive Previews */}
+          <div className="lg:col-span-7 space-y-8">
+            {/* Section: Browser Tabs */}
+            {(activeFilter === 'all' || activeFilter === 'tabs') && (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-lg font-bold text-neutral-900 dark:text-white flex items-center gap-2">
+                      <Layers className="w-5 h-5 text-blue-500" />
+                      <span>Вкладки браузеров</span>
+                    </h2>
+                    <p className="text-xs text-neutral-500 mt-0.5">
+                      Фавикон во вкладках (Chrome, Safari, светлая и темная темы, закрепленные вкладки и закладки)
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-6">
+                  <ChromeDesktopTab settings={settings} metadata={metadata} />
+                  <SafariPreview settings={settings} metadata={metadata} />
+                </div>
+              </div>
+            )}
+
+            {/* Section: Search Engine Results (SERP) */}
+            {(activeFilter === 'all' || activeFilter === 'serp') && (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-lg font-bold text-neutral-900 dark:text-white flex items-center gap-2">
+                      <Search className="w-5 h-5 text-red-500" />
+                      <span>Поисковая выдача (SERP)</span>
+                    </h2>
+                    <p className="text-xs text-neutral-500 mt-0.5">
+                      Как ваш логотип и сниппет выглядят в Google и Яндекс (десктоп и мобильный)
+                    </p>
+                  </div>
+                </div>
+
+                <div className="space-y-6">
+                  <GoogleSerp settings={settings} metadata={metadata} />
+                  <YandexSerp settings={settings} metadata={metadata} />
+                </div>
+              </div>
+            )}
+
+            {/* Section: Diagnostics & Contrast */}
+            {(activeFilter === 'all' || activeFilter === 'diagnostics') && (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-lg font-bold text-neutral-900 dark:text-white flex items-center gap-2">
+                      <SlidersHorizontal className="w-5 h-5 text-indigo-500" />
+                      <span>Диагностика и контрастность</span>
+                    </h2>
+                    <p className="text-xs text-neutral-500 mt-0.5">
+                      Проверка слияния и читаемости в 16px, 32px и 48px
+                    </p>
+                  </div>
+                </div>
+
+                <ContrastAnalysis settings={settings} />
+              </div>
+            )}
+
+            {/* Section: Export & Code */}
+            {(activeFilter === 'all' || activeFilter === 'export') && (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-lg font-bold text-neutral-900 dark:text-white flex items-center gap-2">
+                      <Download className="w-5 h-5 text-emerald-500" />
+                      <span>Скачать фавиконы и код</span>
+                    </h2>
+                    <p className="text-xs text-neutral-500 mt-0.5">
+                      Готовые иконки для скачивания и HTML-теги для вставки на сайт
+                    </p>
+                  </div>
+                </div>
+
+                <ExportSection settings={settings} metadata={metadata} />
+              </div>
+            )}
+          </div>
         </div>
       </main>
+
+      {/* Footer */}
+      <footer className="mt-auto border-t border-neutral-200 dark:border-neutral-800 py-6 text-center text-xs text-neutral-500 bg-white/50 dark:bg-neutral-900/50">
+        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+          <span>LogoScope — инструмент для проверки фавиконов и логотипов</span>
+          <span className="text-neutral-400">100% клиентская обработка — данные не передаются на сервер</span>
+        </div>
+      </footer>
     </div>
   );
 }
