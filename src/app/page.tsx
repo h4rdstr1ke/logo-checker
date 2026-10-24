@@ -89,16 +89,16 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Filter Pills */}
-          <div className="hidden md:flex items-center gap-1 bg-neutral-100 dark:bg-neutral-800 p-1 rounded-xl text-xs font-medium">
+          {/* Filter Pills - visible on all screens */}
+          <div className="flex items-center gap-1 bg-neutral-100 dark:bg-neutral-800 p-1 rounded-xl text-xs font-medium overflow-x-auto max-w-[60vw] sm:max-w-none scrollbar-none shrink-0">
             <button
               type="button"
               data-testid="filter-all"
               onClick={() => setActiveFilter('all')}
-              className={`px-3 py-1.5 rounded-lg transition-all ${
+              className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer whitespace-nowrap ${
                 activeFilter === 'all'
-                  ? 'bg-white dark:bg-neutral-700 shadow-xs text-neutral-900 dark:text-white font-semibold'
-                  : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+                  ? 'bg-blue-600 shadow-sm text-white font-semibold'
+                  : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-200/60 dark:hover:bg-neutral-700/60'
               }`}
             >
               Все превью
@@ -107,10 +107,10 @@ export default function Home() {
               type="button"
               data-testid="filter-tabs"
               onClick={() => setActiveFilter('tabs')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all cursor-pointer whitespace-nowrap ${
                 activeFilter === 'tabs'
-                  ? 'bg-white dark:bg-neutral-700 shadow-xs text-neutral-900 dark:text-white font-semibold'
-                  : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+                  ? 'bg-blue-600 shadow-sm text-white font-semibold'
+                  : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-200/60 dark:hover:bg-neutral-700/60'
               }`}
             >
               <Layers className="w-3.5 h-3.5" />
@@ -120,10 +120,10 @@ export default function Home() {
               type="button"
               data-testid="filter-serp"
               onClick={() => setActiveFilter('serp')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all cursor-pointer whitespace-nowrap ${
                 activeFilter === 'serp'
-                  ? 'bg-white dark:bg-neutral-700 shadow-xs text-neutral-900 dark:text-white font-semibold'
-                  : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+                  ? 'bg-blue-600 shadow-sm text-white font-semibold'
+                  : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-200/60 dark:hover:bg-neutral-700/60'
               }`}
             >
               <Search className="w-3.5 h-3.5" />
@@ -133,10 +133,10 @@ export default function Home() {
               type="button"
               data-testid="filter-diagnostics"
               onClick={() => setActiveFilter('diagnostics')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all cursor-pointer whitespace-nowrap ${
                 activeFilter === 'diagnostics'
-                  ? 'bg-white dark:bg-neutral-700 shadow-xs text-neutral-900 dark:text-white font-semibold'
-                  : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+                  ? 'bg-blue-600 shadow-sm text-white font-semibold'
+                  : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-200/60 dark:hover:bg-neutral-700/60'
               }`}
             >
               <SlidersHorizontal className="w-3.5 h-3.5" />
@@ -146,10 +146,10 @@ export default function Home() {
               type="button"
               data-testid="filter-export"
               onClick={() => setActiveFilter('export')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all cursor-pointer whitespace-nowrap ${
                 activeFilter === 'export'
-                  ? 'bg-white dark:bg-neutral-700 shadow-xs text-neutral-900 dark:text-white font-semibold'
-                  : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white'
+                  ? 'bg-blue-600 shadow-sm text-white font-semibold'
+                  : 'text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-200/60 dark:hover:bg-neutral-700/60'
               }`}
             >
               <Download className="w-3.5 h-3.5" />

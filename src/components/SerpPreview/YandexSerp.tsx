@@ -123,19 +123,24 @@ export const YandexSerp: React.FC<YandexSerpProps> = ({
           isDark ? 'bg-[#18181a] text-[#cacaca]' : 'bg-[#f7f7f7] text-[#333333]'
         }`}
       >
-        {/* Simulated Yandex Search Bar (Yellow button) */}
+        {/* Interactive Yandex Search Bar (Yellow/Red button) */}
         <div className="mb-6 max-w-2xl flex items-center shadow-xs rounded-xl overflow-hidden border border-neutral-300 dark:border-neutral-700">
           <div
-            className={`flex-1 flex items-center gap-2 px-3 py-2 text-xs ${
+            className={`flex-1 flex items-center gap-2 px-3 py-1.5 text-xs ${
               isDark ? 'bg-[#232326] text-white' : 'bg-white text-neutral-800'
             }`}
           >
-            <Search className="w-4 h-4 text-neutral-400" />
-            <span className="truncate">{metadata.siteName} официальный сайт</span>
+            <Search className="w-4 h-4 text-neutral-400 shrink-0" />
+            <input
+              type="text"
+              defaultValue={`${metadata.siteName} официальный сайт`}
+              className="bg-transparent w-full focus:outline-none text-inherit text-xs"
+              placeholder="Поиск в Яндексе..."
+            />
           </div>
           <button
             type="button"
-            className="bg-[#fc3f1d] hover:bg-[#e03415] text-white font-medium text-xs px-4 py-2 shrink-0 transition-colors"
+            className="bg-[#fc3f1d] hover:bg-[#e03415] text-white font-medium text-xs px-4 py-2 shrink-0 transition-colors cursor-pointer"
           >
             Найти
           </button>
@@ -184,13 +189,17 @@ export const YandexSerp: React.FC<YandexSerpProps> = ({
           </div>
 
           {/* Title Link in Yandex Blue */}
-          <h3
-            className={`text-[17px] md:text-[18px] font-medium leading-snug cursor-pointer hover:underline mb-1 transition-colors ${
+          <a
+            href={`https://${metadata.domain || 'example.com'}${metadata.pagePath || ''}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Открыть сайт по ссылке"
+            className={`block text-[17px] md:text-[18px] font-medium leading-snug hover:underline mb-1 transition-colors cursor-pointer ${
               isDark ? 'text-[#8ab4f8]' : 'text-[#001a9b]'
             }`}
           >
-            {metadata.pageTitle}
-          </h3>
+            <h3>{metadata.pageTitle}</h3>
+          </a>
 
           {/* Snippet Description */}
           <p

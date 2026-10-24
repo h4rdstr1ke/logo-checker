@@ -92,8 +92,12 @@ export const SafariPreview: React.FC<SafariPreviewProps> = ({
           </button>
 
           {/* Safari Tab Pill */}
-          <div
-            className={`flex-1 max-w-lg mx-auto flex items-center justify-between px-3 py-1.5 rounded-lg text-xs shadow-xs transition-colors ${
+          <a
+            href={`https://${metadata.domain || 'example.com'}${metadata.pagePath || ''}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Открыть сайт по ссылке в новой вкладке"
+            className={`flex-1 max-w-lg mx-auto flex items-center justify-between px-3 py-1.5 rounded-lg text-xs shadow-xs transition-colors cursor-pointer hover:ring-1 hover:ring-sky-500/50 ${
               isDark
                 ? 'bg-[#2d2d2d] border border-neutral-700/60 text-neutral-200'
                 : 'bg-white border border-neutral-300/80 text-neutral-800'
@@ -110,7 +114,7 @@ export const SafariPreview: React.FC<SafariPreviewProps> = ({
             <div className="flex items-center gap-2 shrink-0 text-neutral-400">
               <RotateCw className="w-3.5 h-3.5 hover:text-neutral-600 dark:hover:text-neutral-200 cursor-pointer" />
             </div>
-          </div>
+          </a>
 
           <div className="flex items-center gap-2 shrink-0 text-neutral-500">
             <button

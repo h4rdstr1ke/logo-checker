@@ -130,18 +130,21 @@ export const GoogleSerp: React.FC<GoogleSerpProps> = ({
           isDark ? 'bg-[#202124] text-[#bdc1c6]' : 'bg-[#ffffff] text-[#4d5156]'
         }`}
       >
-        {/* Simulated Google Search Box */}
+        {/* Interactive Google Search Box */}
         <div
-          className={`mb-6 max-w-2xl flex items-center gap-3 px-4 py-2.5 rounded-full text-xs shadow-xs border ${
+          className={`mb-6 max-w-2xl flex items-center gap-3 px-4 py-2 rounded-full text-xs shadow-xs border ${
             isDark
               ? 'bg-[#303134] border-[#5f6368] text-white'
               : 'bg-white border-neutral-200 shadow-sm text-neutral-800'
           }`}
         >
           <Search className="w-4 h-4 text-neutral-400 shrink-0" />
-          <span className="truncate">
-            site:{metadata.domain || 'example.com'} {metadata.siteName}
-          </span>
+          <input
+            type="text"
+            defaultValue={`site:${metadata.domain || 'example.com'} ${metadata.siteName}`}
+            className="bg-transparent w-full focus:outline-none text-inherit text-xs"
+            placeholder="Поиск в Google..."
+          />
         </div>
 
         {/* The Google Snippet Box */}
@@ -193,20 +196,24 @@ export const GoogleSerp: React.FC<GoogleSerpProps> = ({
             {/* Google Three-dot Options Menu */}
             <button
               type="button"
-              className="text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 shrink-0 p-1"
+              className="text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200 shrink-0 p-1 cursor-pointer"
             >
               <MoreVertical className="w-4 h-4" />
             </button>
           </div>
 
-          {/* Clickable Page Title */}
-          <h3
-            className={`text-[18px] md:text-[20px] font-normal leading-snug cursor-pointer hover:underline mb-1 transition-colors ${
+          {/* Clickable Page Title (link) */}
+          <a
+            href={`https://${metadata.domain || 'example.com'}${metadata.pagePath || ''}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Открыть сайт по ссылке"
+            className={`block text-[18px] md:text-[20px] font-normal leading-snug hover:underline mb-1 transition-colors cursor-pointer ${
               isDark ? 'text-[#8ab4f8]' : 'text-[#1a0dab]'
             }`}
           >
-            {metadata.pageTitle || 'Заголовок веб-страницы в поисковой выдаче'}
-          </h3>
+            <h3>{metadata.pageTitle || 'Заголовок веб-страницы в поисковой выдаче'}</h3>
+          </a>
 
           {/* Meta Description Snippet */}
           <p
